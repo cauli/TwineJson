@@ -38,6 +38,8 @@ window.onload = function() {
 			export: function() {
 				var buffer = [];
 
+				buffer.push("[\r\n"); // Opening JSON
+
 				var storyData = window.document.getElementsByTagName("tw-storydata");
 				if (storyData) {
 					buffer.push(this.buildPassage("StoryTitle","",storyData[0].getAttribute("name")));
@@ -55,47 +57,78 @@ window.onload = function() {
 
 				var passages = window.document.getElementsByTagName("tw-passagedata");
 				for (var i = 0; i < passages.length; ++i) {
-					buffer.push(this.buildPassageFromElement(passages[i]));
+					buffer.push(this.buildPassageFromElement(passages[i], i, passages.length));
 				}
+
+				buffer.push("]\r\n"); // Opening JSON
 
 				return buffer.join('');
 			},
 
 			
-			buildPassageFromElement: function(passage) {
+			buildPassageFromElement: function(passage, index, howManyPassages) {
+				var last = false;
+				
+				if(index+1 == howManyPassages) {
+					last = true;
+				}
+				
 				var name = passage.getAttribute("name");
 				if (!name) {
 					name = "Untitled Passage";
 				}
+
 				var tags = passage.getAttribute("tags");
 				var content = passage.textContent;
 				
-				return this.buildPassage(name, tags, content);
+				return this.buildPassage(name, tags, content, last);
 			},
 	
 	
-			buildPassage: function(title, tags, content) {
+			buildPassage: function(title, tags, content, last) {
 				var result = [];
 				
+				result.push("{\r\n");
+
+				result.push("\t\"name\" : ");
 				result.push("\"",title,"\"");
+
 				if (tags) {
 					result.push(",\r\n");
-					result.push("\"tags\" : ");
-					result.push("[",tags,"]");
+					result.push("\t\"tags\" : ");
+					result.push("\"[",tags,"]\"");
 				}
 
+				/* Push the content */
 				result.push(",\r\n");
-				result.push("\"content\" : ");
-				result.push("\r\n\"", this.scrub(content),"\"\r\n");
+				result.push("\t\"content\" : ");
+				result.push("\"", this.scrub(content),"\",\r\n");
 				
+				result.push("\t\"children\" : ");
+				result.push("\"", this.findChildren(content),"\"\r\n");
+				
+				if (!last) {
+					result.push("},\r\n");
+				} else {
+					result.push("}\r\n");
+				}
+
 				return result.join('');
 			},
 
-			
 			scrub: function(content) {
 				if (content)
+				{
 					content = content.replace(/^\"/gm, "\'");
+					// Removes all line breaks
+					content = content.replace(/(\r\n|\n|\r)/gm,"  ");
+				}
 				return content;
+			},
+
+			findChildren: function(content) {
+				var children = /\[\[(.+)\]\]/gm.execAll(content);
+				return children;
 			}
 
 		}			
@@ -103,3 +136,19 @@ window.onload = function() {
 	
 	window.TwineJson.convert();
 }	
+
+
+RegExp.prototype.execAll = function(string) {
+    var match = null;
+    var matches = new Array();
+    while (match = this.exec(string)) {
+        var matchArray = [];
+        for (i in match) {
+            if (parseInt(i) == i) {
+                matchArray.push(match[i]);
+            }
+        }
+        matches.push(matchArray);
+    }
+    return matches;
+}

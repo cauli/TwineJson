@@ -46,9 +46,11 @@ gulp.task('uglify', function () {
              .pipe(gulp.dest('dist/'))
 });
 
-
-
+// Watch Files For Changes
+gulp.task('watch', function() {
+    gulp.watch('TwineJson.js', ['default']);
+});
 
 gulp.task('default', function() {
-  runSequence('uglify', 'fileincluder-html','minify-html','escape-js','fileincluder-format');
+  runSequence('uglify', 'fileincluder-html','minify-html','escape-js','fileincluder-format','watch');
 });
