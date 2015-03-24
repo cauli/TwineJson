@@ -31,7 +31,58 @@ window.onload = function() {
 			convert: function() {
 				var output = window.document.getElementById("output");
 
-				output.innerHTML = this.export();
+				var jsonString = this.export();
+					
+				var originalJsonPlano = JSON.parse(jsonString);
+				var jsonPlano = originalJsonPlano;
+			
+				var count =0;
+				var hierarchyJSON = [];
+
+				// Para cada um dos elements do jsonPlano
+				// Checkar se tem filho
+				// Para cada filho
+				// Loopar entre todos os elements do jsonPlano procurando pelo nome de filho
+				// Adicionar ao elemento pai num array de filhos
+				for(var i = 0; i < jsonPlano.length; i ++)
+				{
+					jsonPlano[i].children = [];
+
+					if(jsonPlano[i].childrenNames != "")
+					{	
+						var eachChildren = jsonPlano[i].childrenNames.split(',');
+
+						for(var k = 0; k < eachChildren.length; k++ )
+						{
+							// Loop through all elements of the json to find with corresponding name
+							for(var j = 0; j < jsonPlano.length; j ++)
+							{
+								
+
+							/*	count++;
+								console.log(eachChildren[k] == "[["+jsonPlano[j].name+"]]");
+						*/
+
+								if(eachChildren[k] == "[["+jsonPlano[j].name+"]]")
+								{
+									console.log("YES!");
+									jsonPlano[i].children.push(jsonPlano[j]);
+								
+								}
+							}
+						}
+						
+						hierarchyJSON.push(jsonPlano[i]);
+
+					}
+
+
+				}
+
+				console.dir(hierarchyJSON[0]);
+
+				//output.innerHTML = jsonString;
+				output.innerHTML = JSON.stringify(hierarchyJSON[0]);
 			},
 
 			
@@ -104,7 +155,7 @@ window.onload = function() {
 				result.push("\t\"content\" : ");
 				result.push("\"", this.scrub(content),"\",\r\n");
 				
-				result.push("\t\"children\" : ");
+				result.push("\t\"childrenNames\" : ");
 				result.push("\"", this.findChildren(content),"\"\r\n");
 				
 				if (!last) {
@@ -127,7 +178,15 @@ window.onload = function() {
 			},
 
 			findChildren: function(content) {
-				var children = /\[\[(.+)\]\]/gm.execAll(content);
+				var ptrn = /\[\[(.+?)\]\]/gm;
+				var match;
+				var children = [];
+
+				while ( ( match = ptrn.exec(content) ) != null )
+				{
+					children.push(match[0]);
+				}
+
 				return children;
 			}
 
@@ -135,20 +194,4 @@ window.onload = function() {
 	}
 	
 	window.TwineJson.convert();
-}	
-
-
-RegExp.prototype.execAll = function(string) {
-    var match = null;
-    var matches = new Array();
-    while (match = this.exec(string)) {
-        var matchArray = [];
-        for (i in match) {
-            if (parseInt(i) == i) {
-                matchArray.push(match[i]);
-            }
-        }
-        matches.push(matchArray);
-    }
-    return matches;
 }
