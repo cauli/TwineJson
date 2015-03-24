@@ -39,11 +39,11 @@ window.onload = function() {
 				var count =0;
 				var hierarchyJSON = [];
 
-				// Para cada um dos elements do jsonPlano
-				// Checkar se tem filho
-				// Para cada filho
-				// Loopar entre todos os elements do jsonPlano procurando pelo nome de filho
-				// Adicionar ao elemento pai num array de filhos
+				// For each of the elements of jsonPlano
+				// Check if it has one or more children
+				// For each child
+				// Loop through all elements of jsonPlano searching for the name of the child
+				// Add to the parent.children array
 				for(var i = 0; i < jsonPlano.length; i ++)
 				{
 					jsonPlano[i].children = [];
@@ -54,15 +54,8 @@ window.onload = function() {
 
 						for(var k = 0; k < eachChildren.length; k++ )
 						{
-							// Loop through all elements of the json to find with corresponding name
 							for(var j = 0; j < jsonPlano.length; j ++)
 							{
-								
-
-							/*	count++;
-								console.log(eachChildren[k] == "[["+jsonPlano[j].name+"]]");
-						*/
-
 								if(eachChildren[k] == "[["+jsonPlano[j].name+"]]")
 								{
 									console.log("YES!");
@@ -73,12 +66,10 @@ window.onload = function() {
 						}
 						
 						hierarchyJSON.push(jsonPlano[i]);
-
 					}
-
-
 				}
 
+				// FIXME Is this always the case, the first index?
 				console.dir(hierarchyJSON[0]);
 
 				//output.innerHTML = jsonString;
