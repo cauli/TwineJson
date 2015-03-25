@@ -144,16 +144,25 @@ window.onload = function() {
 					result.push("\"[",tags,"]\"");
 				}
 
+				var scrubbedContent = this.scrub(content, " ");
+				var scrupped
+
+
+
+
 				/* Push the content */
 				result.push(",\r\n");
 				result.push("\t\"content\" : ");
-				result.push("\"", this.scrub(content),"\",\r\n");
+				result.push("\"", scrubbedContent,"\",\r\n");
 				
+				
+
+
 				result.push("\t\"childrenNames\" : ");
-				result.push("\"", this.findChildren(content),"\"\r\n");
+				result.push("\"", this.findChildren(scrubbedContent),"\",\r\n");
 				
-				result.push("\t\"features\" : ");
-				result.push("\"", this.findFeatures(content),"\"\r\n");
+				result.push("\t\"features\" :");
+				result.push("", this.findFeatures(content),"\r\n");
 				
 				if (!last) 
 				{
@@ -167,13 +176,13 @@ window.onload = function() {
 				return result.join('');
 			},
 
-			scrub: function(content) {
+			scrub: function(content, separator) {
 				if(content)
 				{
-					content = content.replace(/^\"/gm, "\'");
+					content = content.replace(/\"/gm, "\'");
 
 					// Removes all line breaks
-					content = content.replace(/(\r\n|\n|\r)/gm,"  ");
+					content = content.replace(/(\r\n|\n|\r)/gm,separator);
 				}
 
 				return content;
@@ -183,30 +192,65 @@ window.onload = function() {
 			findChildren: function(content) {
 				var ptrn = /\[\[(.+?)\]\]/gm;
 				var match;
-				var children = [];
+				var results = [];
 
 				while( ( match = ptrn.exec(content) ) != null )
 				{
-					children.push(match[0]);
+					results.push(match[0]);
 				}
 
-				return children;
+				return results;
 			},
 
 
 			// Finds features inside the passage by searching for the {{features}}...{{/features}} syntax
 			findFeatures: function(content) {
-				var ptrn = /\{\{features\}\}(.+?)\{\{\/features\}\}/gm;
+				var ptrn = /\{\{features\}\}((\s|\S)+?)\{\{\/features\}\}/gm;
 				var match;
 				var results = [];
-				match = ptrn.exec(content);
+				var featuresArray = [];
 
-				if(match != null)
+				while( ( match = ptrn.exec(content) ) != null )
 				{
-					results.push(match[1]);
+					var features = match[1].split(/(\r\n|\n|\r|\,)/gm);
+
+					for(var i = 0; i < features.length; i++)
+					{
+						if(features[i].length < 3)
+						{
+							features.splice(i,1);
+							i=-1;
+						}
+					}
+
+					for(var i = 0; i < features.length; i++)
+					{
+						var featureJSON = {};
+
+						if(features[i][0] == "*")
+						{
+							featureJSON.star = true;
+							features[i] = features[i].substring(1);
+						}
+
+						if(features[i][0] == "+")
+						{
+							featureJSON.delta = true;
+							features[i] = features[i].substring(1);
+						}
+
+						if(features[i][0] == "-")
+						{
+							featureJSON.optional = true;
+							features[i] = features[i].substring(1);
+						}
+
+						featureJSON.name = features[i];
+						featuresArray.push(featureJSON);
+					}
 				}
 
-				return results;
+				return JSON.stringify(featuresArray);
 			}
 
 		}			
