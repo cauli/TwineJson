@@ -1,12 +1,12 @@
 /**
 * TwineJson - Twine 2 Json Export Story Format
-* By Cauli Tomaz for Páprica
+* By Cauli Tomaz for Páprica Comunicação
 * http://cau.li/ 
 * http://www.papricacomunicacao.com.br
 *
 * Based on Entweedle by Michael McCollum
 * Copyright (c) 2015 Michael McCollum
-* http://www.maximumverbosity.net/twine/Illume/
+* http://www.maximumverbosity.net/twine/Entweedle/
 *
 * Permission is hereby granted, free of charge, to any person obtaining a copy of this software and
 * associated documentation files (the "Software"), to deal in the Software without restriction,
@@ -27,45 +27,41 @@ window.onload = function() {
 	if (typeof(window.TwineJson) == "undefined") {
 
 		window.TwineJson = {
-
 			convert: function() {
 				var output = window.document.getElementById("output");
 
 				var jsonString = this.export();
 					
-				var originalJsonPlano = JSON.parse(jsonString);
-				var jsonPlano = originalJsonPlano;
+				var originalJsonPlain = JSON.parse(jsonString);
+				var jsonPlain = originalJsonPlain;
 			
-				var count =0;
 				var hierarchyJSON = [];
 
-				// For each of the elements of jsonPlano
+				// For each of the elements of jsonPlain
 				// Check if it has one or more children
 				// For each child
-				// Loop through all elements of jsonPlano searching for the name of the child
+				// Loop through all elements of jsonPlain searching for the name of the child
 				// Add to the parent.children array
-				for(var i = 0; i < jsonPlano.length; i ++)
+				for(var i = 0; i < jsonPlain.length; i ++)
 				{
-					jsonPlano[i].children = [];
+					jsonPlain[i].children = [];
 
-					if(jsonPlano[i].childrenNames != "")
+					if(jsonPlain[i].childrenNames != "")
 					{	
-						var eachChildren = jsonPlano[i].childrenNames.split(',');
+						var eachChildren = jsonPlain[i].childrenNames.split(',');
 
 						for(var k = 0; k < eachChildren.length; k++ )
 						{
-							for(var j = 0; j < jsonPlano.length; j ++)
+							for(var j = 0; j < jsonPlain.length; j++ )
 							{
-								if(eachChildren[k] == "[["+jsonPlano[j].name+"]]")
+								if(eachChildren[k] == "[["+jsonPlain[j].name+"]]")
 								{
-									console.log("YES!");
-									jsonPlano[i].children.push(jsonPlano[j]);
-								
+									jsonPlain[i].children.push(jsonPlain[j]);
 								}
 							}
 						}
 						
-						hierarchyJSON.push(jsonPlano[i]);
+						hierarchyJSON.push(jsonPlain[i]);
 					}
 				}
 
@@ -80,29 +76,33 @@ window.onload = function() {
 			export: function() {
 				var buffer = [];
 
-				buffer.push("[\r\n"); // Opening JSON
+				buffer.push("[\r\n"); // Opens JSON
 
 				var storyData = window.document.getElementsByTagName("tw-storydata");
-				if (storyData) {
+				if (storyData)
+				{
 					buffer.push(this.buildPassage("StoryTitle","",storyData[0].getAttribute("name")));
 				}
 
 				var userScript = window.document.getElementById("twine-user-script");
-				if (userScript) {
+				if (userScript)
+				{
 					buffer.push(this.buildPassage("UserScript","script",userScript.innerHTML));
 				}
 
 				var userStylesheet = window.document.getElementById("twine-user-stylesheet");
-				if (userStylesheet) {
+				if (userStylesheet)
+				{
 					buffer.push(this.buildPassage("UserStylesheet","stylesheet",userStylesheet.innerHTML));
 				}
 
 				var passages = window.document.getElementsByTagName("tw-passagedata");
-				for (var i = 0; i < passages.length; ++i) {
+				for (var i = 0; i < passages.length; ++i)
+				{
 					buffer.push(this.buildPassageFromElement(passages[i], i, passages.length));
 				}
 
-				buffer.push("]\r\n"); // Opening JSON
+				buffer.push("]\r\n"); // Closes JSON
 
 				return buffer.join('');
 			},
@@ -111,12 +111,14 @@ window.onload = function() {
 			buildPassageFromElement: function(passage, index, howManyPassages) {
 				var last = false;
 				
-				if(index+1 == howManyPassages) {
+				if(index+1 == howManyPassages)
+				{
 					last = true;
 				}
 				
 				var name = passage.getAttribute("name");
-				if (!name) {
+				if (!name)
+				{
 					name = "Untitled Passage";
 				}
 
@@ -135,7 +137,8 @@ window.onload = function() {
 				result.push("\t\"name\" : ");
 				result.push("\"",title,"\"");
 
-				if (tags) {
+				if (tags) 
+				{
 					result.push(",\r\n");
 					result.push("\t\"tags\" : ");
 					result.push("\"[",tags,"]\"");
@@ -149,9 +152,12 @@ window.onload = function() {
 				result.push("\t\"childrenNames\" : ");
 				result.push("\"", this.findChildren(content),"\"\r\n");
 				
-				if (!last) {
+				if (!last) 
+				{
 					result.push("},\r\n");
-				} else {
+				}
+				else 
+				{
 					result.push("}\r\n");
 				}
 
@@ -159,21 +165,24 @@ window.onload = function() {
 			},
 
 			scrub: function(content) {
-				if (content)
+				if(content)
 				{
 					content = content.replace(/^\"/gm, "\'");
+
 					// Removes all line breaks
 					content = content.replace(/(\r\n|\n|\r)/gm,"  ");
 				}
+
 				return content;
 			},
 
+			// Finds children passages by searching for the [[Passage Name]] syntax
 			findChildren: function(content) {
 				var ptrn = /\[\[(.+?)\]\]/gm;
 				var match;
 				var children = [];
 
-				while ( ( match = ptrn.exec(content) ) != null )
+				while( ( match = ptrn.exec(content) ) != null )
 				{
 					children.push(match[0]);
 				}
