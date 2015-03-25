@@ -152,6 +152,9 @@ window.onload = function() {
 				result.push("\t\"childrenNames\" : ");
 				result.push("\"", this.findChildren(content),"\"\r\n");
 				
+				result.push("\t\"features\" : ");
+				result.push("\"", this.findFeatures(content),"\"\r\n");
+				
 				if (!last) 
 				{
 					result.push("},\r\n");
@@ -188,6 +191,22 @@ window.onload = function() {
 				}
 
 				return children;
+			},
+
+
+			// Finds features inside the passage by searching for the {{features}}...{{/features}} syntax
+			findFeatures: function(content) {
+				var ptrn = /\{\{features\}\}(.+?)\{\{\/features\}\}/gm;
+				var match;
+				var results = [];
+				match = ptrn.exec(content);
+
+				if(match != null)
+				{
+					results.push(match[1]);
+				}
+
+				return results;
 			}
 
 		}			
