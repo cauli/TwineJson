@@ -28,15 +28,39 @@ window.onload = function() {
 
 		var ExportOptions = {
 			// If true, puts every element as a child or grandchild of the Starting Point
+			// WARNING: Hierarchical JSON trees shouldn't be cyclic. This will cause an infinite loop.
 			"isHierarchical":true,
 			// Exports using {{features}}{{/features}} syntax (Should default to false)
 			// * adds the property "star" to the element
 			// + adds the property "delta" to the element
 			// - adds the property "optional" to the element
-			"exportFeatures":false, 
+			"exportFeatures":true, 
 		};
 
 		window.TwineJson = {
+			isCyclic: function(obj) {
+			  var seenObjects = [];
+
+			  function detect (obj) {
+			    if (obj && typeof obj === 'object') {
+			      if (seenObjects.indexOf(obj) !== -1) {
+			        return true;
+			      }
+			      seenObjects.push(obj);
+			      for (var key in obj) {
+			        if (obj.hasOwnProperty(key) && detect(obj[key])) {
+			          console.error(obj, ' Found cycle at ' + key);
+			          return true;
+			        }
+			      }
+			    }
+			    return false;
+			  }
+
+			  return detect(obj);
+			},
+
+
 			convert: function() {
 				var output = window.document.getElementById("output");
 
@@ -53,7 +77,7 @@ window.onload = function() {
 				* Loop through all elements of jsonPlain searching for the name of the child
 				* Add to the parent.children array
 				*/ 
-				if(ExportOptions.hierarchical)
+				if(ExportOptions.isHierarchical)
 				{			
 					var hierarchyJSON = [];
 
@@ -80,10 +104,17 @@ window.onload = function() {
 						}
 					}
 
-					// FIXME Is this always the case, the first index?
-					console.dir(hierarchyJSON[0]);
-
-					output.innerHTML = JSON.stringify(hierarchyJSON[0]);
+					if(this.isCyclic(hierarchyJSON[0]))
+					{
+						output.innerHTML = "<h2>Error: Cyclic reference found</h2><br>Cyclic references aren't allowed in hierarchical JSON structures.<br>Please set ExportOptions.isHierarchical to false to use cyclic references.";
+					}
+					else
+					{
+						// FIXME Is this always the case, the first index?
+						console.dir(hierarchyJSON[0]);
+						output.innerHTML = JSON.stringify(hierarchyJSON[0]);
+					}
+					
 				}
 				else
 				{
