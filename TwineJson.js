@@ -26,6 +26,16 @@
 window.onload = function() {
 	if (typeof(window.TwineJson) == "undefined") {
 
+		var ExportOptions = {
+			// If true, puts every element as a child or grandchild of the Starting Point
+			"isHierarchical":true,
+			// Exports using {{features}}{{/features}} syntax (Should default to false)
+			// * adds the property "star" to the element
+			// + adds the property "delta" to the element
+			// - adds the property "optional" to the element
+			"exportFeatures":false, 
+		};
+
 		window.TwineJson = {
 			convert: function() {
 				var output = window.document.getElementById("output");
@@ -34,42 +44,54 @@ window.onload = function() {
 					
 				var originalJsonPlain = JSON.parse(jsonString);
 				var jsonPlain = originalJsonPlain;
-			
-				var hierarchyJSON = [];
 
-				// For each of the elements of jsonPlain
-				// Check if it has one or more children
-				// For each child
-				// Loop through all elements of jsonPlain searching for the name of the child
-				// Add to the parent.children array
-				for(var i = 0; i < jsonPlain.length; i ++)
-				{
-					jsonPlain[i].children = [];
 
-					if(jsonPlain[i].childrenNames != "")
-					{	
-						var eachChildren = jsonPlain[i].childrenNames.split(',');
+				/* 
+				* For each of the elements of jsonPlain
+				* Check if it has one or more children
+				* For each child
+				* Loop through all elements of jsonPlain searching for the name of the child
+				* Add to the parent.children array
+				*/ 
+				if(ExportOptions.hierarchical)
+				{			
+					var hierarchyJSON = [];
 
-						for(var k = 0; k < eachChildren.length; k++ )
-						{
-							for(var j = 0; j < jsonPlain.length; j++ )
+					for(var i = 0; i < jsonPlain.length; i ++)
+					{
+						jsonPlain[i].children = [];
+
+						if(jsonPlain[i].childrenNames != "")
+						{	
+							var eachChildren = jsonPlain[i].childrenNames.split(',');
+
+							for(var k = 0; k < eachChildren.length; k++ )
 							{
-								if(eachChildren[k] == "[["+jsonPlain[j].name+"]]")
+								for(var j = 0; j < jsonPlain.length; j++ )
 								{
-									jsonPlain[i].children.push(jsonPlain[j]);
+									if(eachChildren[k] == "[["+jsonPlain[j].name+"]]")
+									{
+										jsonPlain[i].children.push(jsonPlain[j]);
+									}
 								}
 							}
+							
+							hierarchyJSON.push(jsonPlain[i]);
 						}
-						
-						hierarchyJSON.push(jsonPlain[i]);
 					}
+
+					// FIXME Is this always the case, the first index?
+					console.dir(hierarchyJSON[0]);
+
+					output.innerHTML = JSON.stringify(hierarchyJSON[0]);
+				}
+				else
+				{
+					output.innerHTML = JSON.stringify(jsonPlain);
 				}
 
-				// FIXME Is this always the case, the first index?
-				console.dir(hierarchyJSON[0]);
 
-				//output.innerHTML = jsonString;
-				output.innerHTML = JSON.stringify(hierarchyJSON[0]);
+			
 			},
 
 			
@@ -145,24 +167,23 @@ window.onload = function() {
 				}
 
 				var scrubbedContent = this.scrub(content, " ");
-				var scrupped
-
-
-
 
 				/* Push the content */
 				result.push(",\r\n");
 				result.push("\t\"content\" : ");
-				result.push("\"", scrubbedContent,"\",\r\n");
+				result.push("\"", scrubbedContent,"\"");
 				
-				
-
-
+				result.push(",\r\n");
 				result.push("\t\"childrenNames\" : ");
-				result.push("\"", this.findChildren(scrubbedContent),"\",\r\n");
+				result.push("\"", this.findChildren(scrubbedContent),"\"");
 				
-				result.push("\t\"features\" :");
-				result.push("", this.findFeatures(content),"\r\n");
+				if(ExportOptions.exportFeatures)
+				{
+					result.push(",\r\n");
+					result.push("\t\"features\" :");
+					result.push("", this.findFeatures(content),"\r\n");
+				}
+
 				
 				if (!last) 
 				{
@@ -214,9 +235,11 @@ window.onload = function() {
 				{
 					var features = match[1].split(/(\r\n|\n|\r|\,)/gm);
 
+					// Cleans up the features array by removing empty/return entries
+					// TIP: <= 1 because carriage returns counts as one character
 					for(var i = 0; i < features.length; i++)
 					{
-						if(features[i].length < 3)
+						if(features[i].length <= 1)
 						{
 							features.splice(i,1);
 							i=-1;

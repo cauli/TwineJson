@@ -5,6 +5,7 @@ var minifyHTML = require('gulp-minify-html');
 var fileincluder = require('gulp-file-includer')
 var jsEscape = require('gulp-js-escape');
 var runSequence = require('run-sequence');
+var clean = require('gulp-clean');
 
 gulp.task('fileincluder-html', function() {
   return gulp.src(['storyFormat.html'])
@@ -21,6 +22,15 @@ gulp.task('minify-html', function() {
   return gulp.src('./dist/storyFormat.html')
     .pipe(minifyHTML(opts))
     .pipe(gulp.dest('./dist/'));
+});
+
+gulp.task('clean-dist', function() {
+  gulp.src('./dist/escaped/', {read: false})
+        .pipe(clean());
+  gulp.src('./dist/*.html', {read: false})
+        .pipe(clean());     
+  return gulp.src('./dist/TwineJson.js', {read: false})
+        .pipe(clean());    
 });
 
 gulp.task('escape-js', function() {
@@ -52,5 +62,5 @@ gulp.task('watch', function() {
 });
 
 gulp.task('default', function() {
-  runSequence('uglify', 'fileincluder-html','minify-html','escape-js','fileincluder-format','watch');
+  runSequence('uglify', 'fileincluder-html','minify-html','escape-js','fileincluder-format','clean-dist','watch');
 });
