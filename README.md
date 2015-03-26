@@ -11,20 +11,15 @@ TwineJson aims to cleanly export Twine2 projects to JSON, adding information tha
 
 ## Features and Planned Features
 
-+ Building hierarchical JSON objects
-
-
-## How to use it
-
-...
++ Builds hierarchical JSON objects
++ Builds non-hierarchical (plain) JSON objects
++ Detects cyclic stories to avoid a hierarchical inception 
 
 
 ## TO-DO
 
-- Detecting cyclic stories to avoid a hierarchical inception 
 - Building clean, indented JSON
 - Building minified JSON
 - Adding syntax for custom JSON properties
-- Building non-hierarchical (plain) JSON objects
 - Automate JSON validation
 - Write "How to use it"
