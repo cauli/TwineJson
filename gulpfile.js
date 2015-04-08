@@ -18,9 +18,9 @@ gulp.task('jslint', function () {
             // these directives can 
             // be found in the official 
             // JSLint documentation. 
-            node: true,
-            evil: true,
-            nomen: true,
+            node: false,
+            evil: false,
+            nomen: false,
  
             // you can also set global 
             // declarations for all source 
@@ -48,7 +48,7 @@ gulp.task('jslint', function () {
             // specify whether or not 
             // to show 'PASS' messages 
             // for built-in reporter 
-            errorsOnly: false
+            errorsOnly: true
         }))
  
         // error handling: 
@@ -116,6 +116,10 @@ gulp.task('watch', function() {
     gulp.watch('TwineJson.js', ['default']);
 });
 
-gulp.task('default', function() {
+gulp.task('lint', function() {
   runSequence( 'jslint','uglify','fileincluder-html','minify-html','escape-js','fileincluder-format','clean-dist','watch');
+});
+
+gulp.task('default', function() {
+  runSequence( 'uglify','fileincluder-html','minify-html','escape-js','fileincluder-format','clean-dist','watch');
 });

@@ -23,23 +23,28 @@
 * WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
+
+
+
 window.onload = function () {
-  if (typeof(window.TwineJson) == "undefined") {
+		'use strict';
+
+    if (typeof (window.TwineJson) === "undefined") {
     var idCount = 0;
 
     var ExportOptions = {
       // If true, puts every element as a child or grandchild of the Starting Point
       // WARNING: Hierarchical JSON trees shouldn't be cyclic. This will cause an infinite loop.
-      "isHierarchical":true,
+      "isHierarchical" : true,
       // Exports what is inside of {{order}}{{/order}} to ".order" property on JSON
-      "exportOrder":true,
+      "exportOrder" : true,
       // Exports using {{features}}{{/features}} syntax (Should default to false)
       // * adds the property "star" to the element
       // + adds the property "delta" to the element
       // - adds the property "optional" to the element
-      "exportFeatures":true,
+      "exportFeatures" : true,
       // Export Unique ID for node
-      "exportID": true
+      "exportID" : true
     };
 
     window.TwineJson = {
@@ -96,7 +101,7 @@ window.onload = function () {
           {
             jsonPlain[i].children = [];
 
-            if(jsonPlain[i].childrenNames != "")
+            if(jsonPlain[i].childrenNames !== "")
             {
               var eachChildren = jsonPlain[i].childrenNames.split(',');
 
@@ -131,12 +136,8 @@ window.onload = function () {
         {
           output.innerHTML = JSON.stringify(jsonPlain);
         }
-
-
-      
       },
 
-      
       export: function() {
         var buffer = [];
 
@@ -270,7 +271,7 @@ window.onload = function () {
         var match;
         var results = [];
 
-        while( ( match = ptrn.exec(content) ) != null )
+        while( ( match = ptrn.exec(content) ) !== null )
         {
           results.push(match[0]);
         }
@@ -285,7 +286,7 @@ window.onload = function () {
         var results = [];
         var orderArray = [];
 
-        while( ( match = ptrn.exec(content) ) != null )
+        while( ( match = ptrn.exec(content) ) !== null )
         {
           var order = match[1].split(/(\r\n|\n|\r)/gm);
 
@@ -300,15 +301,15 @@ window.onload = function () {
             }
           }
 
-          for(var i = 0; i < order.length; i++)
+          for(var j = 0; j < order.length; j++)
           {
-            featureJSON.order = order[i];
+            featureJSON.order = order[j];
             orderArray.push(featureJSON);
           }
         }
 
         return JSON.stringify(orderArray);
-      }
+      },
 
       // Finds features inside the passage by searching for the {{features}}...{{/features}} syntax
       findFeatures: function(content) {
@@ -317,18 +318,18 @@ window.onload = function () {
         var results = [];
         var featuresArray = [];
 
-        while( ( match = ptrn.exec(content) ) != null )
+        while( ( match = ptrn.exec(content) ) !== null )
         {
           var features = match[1].split(/(\r\n|\n|\r)/gm);
 
           // Cleans up the features array by removing empty/return entries
           // TIP: <= 1 because carriage returns counts as one character
-          for(var i = 0; i < features.length; i++)
+          for(var j = 0; j < features.length; j++)
           {
-            if(features[i].length <= 1)
+            if(features[j].length <= 1)
             {
-              features.splice(i,1);
-              i=-1;
+              features.splice(j,1);
+              j=-1;
             }
           }
 
@@ -339,7 +340,7 @@ window.onload = function () {
 
             var featureJSON = {};
 
-            if(matches != null)
+            if(matches !== null)
             {
               if(matches[1])
               {
@@ -380,8 +381,8 @@ window.onload = function () {
         return JSON.stringify(featuresArray);
       }
 
-    }      
+    };
   }
   
   window.TwineJson.convert();
-}
+};
