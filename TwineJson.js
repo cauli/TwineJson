@@ -1,5 +1,5 @@
 /**
-* TwineJson - Twine 2 Json Export Story Format
+* TwineJson - Twine 2 JSON Exporter Utility Story Format
 * By Cauli Tomaz for Páprica Comunicação
 * http://cau.li/ 
 * http://www.papricacomunicacao.com.br
@@ -27,8 +27,6 @@
 
 
 window.onload = function () {
-		'use strict';
-
     if (typeof (window.TwineJson) === "undefined") {
     var idCount = 0;
 
@@ -182,6 +180,7 @@ window.onload = function () {
         }
         
         var name = passage.getAttribute("name");
+
         if (!name)
         {
           name = "Untitled Passage";
@@ -204,7 +203,8 @@ window.onload = function () {
           result.push("\t\"id\" : ");
           result.push("\"",idCount++,"\"");
         }
-
+        
+        result.push(",\r\n");
         result.push("\t\"name\" : ");
         result.push("\"",title,"\"");
 
@@ -240,7 +240,6 @@ window.onload = function () {
           result.push("", this.findOrder(content),"\r\n");
         }
 
-        
         if (!last) 
         {
           result.push("},\r\n");

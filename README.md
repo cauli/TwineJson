@@ -1,5 +1,5 @@
 # TwineJson
-TwineJson is a Twine2 JSON Exporter story format
+TwineJson - Twine 2 JSON Exporter Utility Story Format
 
 Based on Entweedle by Michael McCollum
 http://www.maximumverbosity.net/twine/Entweedle/

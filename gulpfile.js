@@ -18,9 +18,9 @@ gulp.task('jslint', function () {
             // these directives can 
             // be found in the official 
             // JSLint documentation. 
-            node: false,
-            evil: false,
-            nomen: false,
+            node: true,
+            evil: true,
+            nomen: true,
  
             // you can also set global 
             // declarations for all source 
