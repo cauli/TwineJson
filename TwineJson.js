@@ -24,8 +24,6 @@
 * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 */
 
-
-
 window.onload = function () {
     if (typeof (window.TwineJson) === "undefined") {
     var idCount = 0;
@@ -33,16 +31,21 @@ window.onload = function () {
     var ExportOptions = {
       // If true, puts every element as a child or grandchild of the Starting Point
       // WARNING: Hierarchical JSON trees shouldn't be cyclic. This will cause an infinite loop.
-      "isHierarchical" : true,
-      // Exports what is inside of {{order}}{{/order}} to ".order" property on JSON
-      "exportOrder" : true,
+      'isHierarchical' : true,
+      // Exports what is inside of {{order}}{{/order}} to '.order' property on JSON
+      'exportOrder' : true,
       // Exports using {{features}}{{/features}} syntax (Should default to false)
-      // * adds the property "star" to the element
-      // + adds the property "delta" to the element
-      // - adds the property "optional" to the element
-      "exportFeatures" : true,
+      // * adds the property 'star' to the element
+      // + adds the property 'delta' to the element
+      // - adds the property 'optional' to the element
+      'exportFeatures' : true,
       // Export Unique ID for node
-      "exportID" : true
+      'exportID' : true,
+      // Export unknows properties inside {{property}}{{/property}} tags
+      'exportOtherProperties' : true,
+      // Exclude these properties from OtherProperties Export.
+      // Expected input: ['property1','property2','...','propertyN'];
+      'excludeOtherProperties' : ['features','order']
     };
 
     window.TwineJson = {
@@ -79,10 +82,9 @@ window.onload = function () {
         var output = window.document.getElementById("output");
 
         var jsonString = this.export();
-          
+
         var originalJsonPlain = JSON.parse(jsonString);
         var jsonPlain = originalJsonPlain;
-
 
         /* 
         *  For each of the elements of jsonPlain
@@ -240,6 +242,11 @@ window.onload = function () {
           result.push("", this.findOrder(content),"\r\n");
         }
 
+        if(ExportOptions.exportOtherProperties)
+        {
+          result.push(this.findOtherProperties(content, ExportOptions.excludeOtherProperties));
+        }
+
         if (!last) 
         {
           result.push("},\r\n");
@@ -250,6 +257,60 @@ window.onload = function () {
         }
 
         return result.join('');
+      },
+
+      // Finds any content between {{}}{{/}} and adds returns it as a property
+      findOtherProperties: function(content, excluding) {
+        var propertiesAdded = "";
+
+        var ptrn = /\{\{((\s|\S)+?)\}\}((\s|\S)+?)\{\{\/\1\}\}/gm;
+        var match;
+        var results = [];
+
+        while( ( match = ptrn.exec(content) ) !== null )
+        {
+          var property = match[1];
+
+          if(excluding.indexOf(property) == -1)
+          {
+              var value = match[3].split(/(\r\n|\n|\r)/gm);
+              var valuesArray = [];
+
+              // <= 1 because carriage returns counts as one character
+              for(var i = 0; i < value.length; i++)
+              {
+                if(value[i].length <= 1)
+                {
+                  value.splice(i,1);
+                  i =- 1;
+                }
+              }
+
+              if(value.length === 1)
+              {
+                propertiesAdded += ",\r\n";
+                propertiesAdded += "\t\""+property+"\" :";
+                propertiesAdded += "\""+value[0]+"\"\r\n";
+              }
+              else
+              {
+                var propertiesJSON = {};
+
+                for(var j = 0; j < value.length; j++)
+                {
+                   propertiesJSON[j] = value[j];
+                }
+
+                valuesArray.push(propertiesJSON);
+
+                propertiesAdded += ",\r\n";
+                propertiesAdded += "\t\""+property+"\" :";
+                propertiesAdded += ""+JSON.stringify(valuesArray)+"\r\n";
+              }
+          }
+        }
+
+        return propertiesAdded;
       },
 
       scrub: function(content, separator) {
