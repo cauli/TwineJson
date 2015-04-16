@@ -15,7 +15,8 @@ You can, for instance, generate hierarchical JSONs that contains the information
 + Builds hierarchical JSON objects
 + Builds non-hierarchical (plain) JSON objects
 + Detects cyclic stories to avoid a hierarchical inception 
-+ Custom JSON properties by using the {{feature}}content{{/feature}}
++ Custom JSON properties by using the {{propertyKey}}Value{{/propertyKey}} syntax
++ Automatically saves story to 'storyname-timestamp.json' file
 
 ## Adding custom properties
 
@@ -42,7 +43,7 @@ Will be built as:
 
 ## Hierarchical JSON
 
-A father->child relationship will be exported as follows:
+A Father->Child relationship will be exported as follows:
 
 ```json
 {
@@ -67,8 +68,8 @@ A father->child relationship will be exported as follows:
 
 ## Planned Features
 
-- Smarter cyclic detection
-- Building clean, indented JSON
+- Building clean, indented JSON (almost there!)
+- Smarter cyclic detection (Detect only Passage<-(nPassages)->Passage that would cause an infinite JSON)
 - Building minified JSON
 - Automate JSON validation
 - Write "How to use it"
