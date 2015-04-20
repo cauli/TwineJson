@@ -50,7 +50,8 @@ window.onload = function () {
       // Expected input: ['property1','property2','...','propertyN'];
       'excludeOtherProperties' : ['features','order'],
       // Save as a .json file
-      'saveAsFile' : true
+      'saveAsFile' : true,
+      'newLine':true
     };
 
     window.TwineJson = {
@@ -89,6 +90,7 @@ window.onload = function () {
 
 
       convert: function() {
+        var storyData = window.document.getElementsByTagName("tw-storydata");
         var output = window.document.getElementById("output");
 
         var jsonString = this.export();
@@ -139,11 +141,22 @@ window.onload = function () {
             // FIXME Is this always the case, the first index?
             console.dir(hierarchyJSON[0]);
             output.innerHTML = JSON.stringify(hierarchyJSON[0]);
+
+            if(ExportOptions.saveAsFile)
+            {
+              this.saveAsFile(storyData[0].getAttribute("name"),JSON.stringify(hierarchyJSON[0]));
+            }
+
           }
           
         }
         else
         {
+          if(ExportOptions.saveAsFile)
+          {
+            this.saveAsFile(storyData[0].getAttribute("name"),JSON.stringify(jsonPlain));
+          }
+
           output.innerHTML = JSON.stringify(jsonPlain);
         }
       },
@@ -179,12 +192,7 @@ window.onload = function () {
 
         buffer.push("]\r\n"); // Closes JSON
 
-        if(ExportOptions.saveAsFile)
-        {
-          this.saveAsFile(storyData[0].getAttribute("name"),buffer.join(''));
-        }
-
-        return buffer.join('');
+        return buffer.join(''); //buffer.join('');
       },
 
       
@@ -213,7 +221,14 @@ window.onload = function () {
       buildPassage: function(title, tags, content, last) {
         var result = [];
         
-        result.push("{\r\n");
+        var optionalNewLine = '';
+
+        if(ExportOptions.newLine)
+        {
+          optionalNewLine = '\r\n';
+        }
+     
+        result.push("{"+optionalNewLine);
 
         if(ExportOptions.exportID)
         {
@@ -221,13 +236,13 @@ window.onload = function () {
           result.push("\"",idCount++,"\"");
         }
         
-        result.push(",\r\n");
+        result.push(","+optionalNewLine);
         result.push("\t\"name\" : ");
         result.push("\"",title,"\"");
 
         if (tags) 
         {
-          result.push(",\r\n");
+          result.push(","+optionalNewLine);
           result.push("\t\"tags\" : ");
           result.push("\"[",tags,"]\"");
         }
@@ -235,26 +250,26 @@ window.onload = function () {
         var scrubbedContent = this.scrub(content, " ");
 
         /* Push the content */
-        result.push(",\r\n");
+        result.push(","+optionalNewLine);
         result.push("\t\"content\" : ");
         result.push("\"", scrubbedContent,"\"");
         
-        result.push(",\r\n");
+        result.push(","+optionalNewLine);
         result.push("\t\"childrenNames\" : ");
         result.push("\"", this.findChildren(scrubbedContent),"\"");
         
         if(ExportOptions.exportFeatures)
         {
-          result.push(",\r\n");
+          result.push(","+optionalNewLine);
           result.push("\t\"features\" :");
-          result.push("", this.findFeatures(content),"\r\n");
+          result.push("", this.findFeatures(content),"");
         }
 
         if(ExportOptions.exportOrder)
         {
-          result.push(",\r\n");
+          result.push(","+optionalNewLine);
           result.push("\t\"order\" :");
-          result.push("", this.findOrder(content),"\r\n");
+          result.push("", this.findOrder(content),"");
         }
 
         if(ExportOptions.exportOtherProperties)
@@ -264,11 +279,11 @@ window.onload = function () {
 
         if (!last) 
         {
-          result.push("},\r\n");
+          result.push("},"+optionalNewLine);
         }
         else 
         {
-          result.push("}\r\n");
+          result.push("}"+optionalNewLine);
         }
 
         return result.join('');
@@ -276,6 +291,13 @@ window.onload = function () {
 
       // Finds any content between {{}}{{/}} and adds returns it as a property
       findOtherProperties: function(content, excluding) {
+        var optionalNewLine = '';
+
+        if(ExportOptions.newLine)
+        {
+          optionalNewLine = '\r\n';
+        }
+
         var propertiesAdded = "";
 
         var ptrn = /\{\{((\s|\S)+?)\}\}((\s|\S)+?)\{\{\/\1\}\}/gm;
@@ -305,7 +327,7 @@ window.onload = function () {
               {
                 propertiesAdded += ",\r\n";
                 propertiesAdded += "\t\""+property+"\" :";
-                propertiesAdded += "\""+value[0]+"\"\r\n";
+                propertiesAdded += "\""+value[0]+"\""+optionalNewLine;
               }
               else
               {
@@ -318,7 +340,7 @@ window.onload = function () {
 
                 valuesArray.push(propertiesJSON);
 
-                propertiesAdded += ",\r\n";
+                propertiesAdded += ","+optionalNewLine;
                 propertiesAdded += "\t\""+property+"\" :";
                 propertiesAdded += ""+JSON.stringify(valuesArray)+"\r\n";
               }
