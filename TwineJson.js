@@ -55,9 +55,7 @@ window.onload = function () {
 
     window.TwineJson = {
       saveAsFile: function(title, text) {
-
-        var blob = new Blob([text], {type: "text/plain;charset=utf-8"});
-
+        var blob = new Blob([text], {type: "text/json;charset=utf-8"});
         saveAs(blob, title.replace(/[^a-z0-9]/gi, '').toLowerCase()+"-"+Math.floor(Date.now() / 1000)+".json");
       },
 

@@ -1,6 +1,9 @@
 # TwineJson
 TwineJson - Twine 2 JSON Exporter Utility Story Format
 
+Built for Páprica Comunicação
+http://www.papricacomunicacao.com.br
+
 Based on Entweedle by Michael McCollum
 http://www.maximumverbosity.net/twine/Entweedle/
 
