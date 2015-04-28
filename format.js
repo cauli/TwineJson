@@ -1,6 +1,6 @@
 window.storyFormat({
 	"name":"TwineJson",
-	"version":"0.0.4",
+	"version":"0.0.5",
 	"author":"<a href='http://www.papricacomunicacao.com.br'>Páprica Comunicação</a>",
 	"description":"Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
 	"image":"icon.svg",
