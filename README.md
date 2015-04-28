@@ -7,6 +7,17 @@ http://www.papricacomunicacao.com.br
 Based on Entweedle by Michael McCollum
 http://www.maximumverbosity.net/twine/Entweedle/
 
+## How to Use
+
+Add this URL as your story format
+
+>http://cau.li/TwineJson/format.js
+
+## How to Build It
+
+> $ npm install
+> $ gulp
+
 ## Objectives
 
 TwineJson exports Twine2 projects to JSON, adding information that goes beyond plaintext data.
@@ -73,4 +84,3 @@ A Father->Child relationship will be exported as follows:
 
 - Smarter cyclic detection (Detect only Passage<-(nPassages)->Passage that would cause an infinite JSON)
 - Automate JSON validation
-- Write "How to use it"
