@@ -14,12 +14,12 @@ TwineJson exports Twine2 projects to JSON, adding information that goes beyond p
 You can, for instance, generate hierarchical JSONs that contains the information of ancestors of each passage.
 
 ## Features
-
-+ Builds hierarchical JSON objects
-+ Builds non-hierarchical (plain) JSON objects
++ Automatically saves to .json file by using the HTML5 File API
++ Builds hierarchical or non-hierarchical (plain) JSON objects
 + Detects cyclic stories to avoid a hierarchical inception 
 + Custom JSON properties by using the {{propertyKey}}Value{{/propertyKey}} syntax
-+ Automatically saves story to 'storyname-timestamp.json' file
++ Exports Twine position information
++ Builds clean expanded or minified JSON
 
 ## Adding custom properties
 
@@ -71,8 +71,6 @@ A Father->Child relationship will be exported as follows:
 
 ## Planned Features
 
-- Building clean, indented JSON (almost there!)
 - Smarter cyclic detection (Detect only Passage<-(nPassages)->Passage that would cause an infinite JSON)
-- Building minified JSON
 - Automate JSON validation
 - Write "How to use it"
