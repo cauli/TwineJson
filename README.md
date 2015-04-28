@@ -15,8 +15,11 @@ Add this URL as your story format
 
 ## How to Build It
 
-> $ npm install
-> $ gulp
+```bash
+npm install
+
+gulp
+```
 
 ## Objectives
 
