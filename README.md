@@ -37,10 +37,14 @@ Long version:
 ## How to Build It
 
 ```bash
-npm install
+$ npm install --global gulp-cli #install gulp if you don't have already
 
-gulp
+$ npm install #installs all dependencies specified on package.json
+
+$ gulp
 ```
+
+Your file format will be created on the `./dist/format.js` folder.
 
 ## Objectives
 

@@ -1,0 +1,33 @@
+{
+  "name": "TwineJson",
+  "version": "0.0.6",
+  "description": "Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
+  "main": "format.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "dependencies": {
+    "express": "^4.13.3"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/cauli/TwineJson"
+  },
+  "keywords": [
+    "node",
+    "heroku",
+    "express"
+  ],
+  "author": "Cauli Tomaz",
+  "license": "MIT",
+  "devDependencies": {
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-file-includer": "^1.0.0",
+    "gulp-js-escape": "^1.0.1",
+    "gulp-jslint": "^1.0.1",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-uglify": "^1.5.4",
+    "run-sequence": "^1.2.2"
+  }
+}
