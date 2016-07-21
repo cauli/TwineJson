@@ -17,7 +17,7 @@ Short version:
 
 Add this URL as your story format
 
->http://cau.li/TwineJson/format.js
+>https://cau.li/TwineJson/format.js
 
 Long version:
 
