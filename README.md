@@ -1,13 +1,6 @@
 # TwineJson
 TwineJson - Twine 2 JSON Exporter Utility Story Format
 
-### WARNING: It looks like using TwineJson with the current version of Twine 2 is not working at the moment.
-
-
-
-Built for Páprica Comunicação
-http://www.papricacomunicacao.com.br
-
 Based on Entweedle by Michael McCollum
 http://www.maximumverbosity.net/twine/Entweedle/
 
