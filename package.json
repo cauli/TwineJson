@@ -1,13 +1,10 @@
 {
   "name": "TwineJson",
-  "version": "0.0.7",
+  "version": "0.0.8",
   "description": "Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
   "main": "format.js",
   "scripts": {
-    "start": "node index.js"
-  },
-  "dependencies": {
-    "express": "^4.13.3"
+    "start": "gulp"
   },
   "repository": {
     "type": "git",
