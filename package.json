@@ -4,7 +4,7 @@
   "description": "Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
   "main": "format.js",
   "scripts": {
-    "start": "gulp"
+    "test": "mocha"
   },
   "repository": {
     "type": "git",
@@ -13,9 +13,6 @@
   "keywords": [
     "node"
   ],
-  "scripts": {
-    "test": "mocha"
-  },
   "dependencies": {
     "es6-shim": "latest",
     "jquery": "latest"
@@ -23,6 +20,7 @@
   "author": "Cauli Tomaz",
   "license": "MIT",
   "devDependencies": {
+    "amdefine": "^1.0.0",
     "chai": "^3.5.0",
     "gulp": "^3.9.1",
     "gulp-clean": "^0.3.2",
@@ -32,6 +30,7 @@
     "gulp-minify-html": "^1.0.6",
     "gulp-uglify": "^1.5.4",
     "mocha": "^2.5.3",
+    "requirejs": "^2.2.0",
     "run-sequence": "^1.2.2"
   }
 }

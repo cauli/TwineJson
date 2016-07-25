@@ -14,6 +14,24 @@
 				border-radius: 5px;
 				overflow-y: auto;
 			}
+
+			pre {outline: 1px solid #ccc; 
+				   padding: 5px; 
+				   margin: 5px; 
+				 	 height: 100%;}
+			.string { color: green; }
+			.number { color: darkorange; }
+			.boolean { color: blue; }
+			.null { color: magenta; }
+			.key { color: red; }
+
+			textarea {
+				height: 1px;
+				display: block;
+				width:1px;
+				position:absolute;
+				left:999px;
+			}
 		</style>
 
 	</head>
@@ -24,7 +42,9 @@
 	<body>
 		<h1>TwineJson results</h1>
 		<h3>JSON output</h3>
-		<textarea id='output'></textarea>
+		<pre id='output'>
+		</pre>
+		<textarea id='outputHidden'></textarea>
 		<a href='#' class='copy'>Copy to clipboard</a>
 
 		<div id='storyData' style="display: none;"><tw-storydata name="Test" startnode="1" creator="Twine" creator-version="2.0.11" ifid="1F7F0675-339C-4CDF-952C-FB0A8D778EE1" format="TwineJson" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="Night" tags="" position="702,326">[[test|Another Passage]]</tw-passagedata>
@@ -40,7 +60,7 @@
 			var copyButton = document.querySelector('.copy');
 
 			copyButton.addEventListener('click', function(event) {
-			  var copyTextarea = document.querySelector('#output');
+			  var copyTextarea = document.querySelector('#outputHidden');
 			  copyTextarea.select();
 
 			  try {

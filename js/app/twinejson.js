@@ -9,113 +9,63 @@
  * https://github.com/cauli/TwineJson
  */
 
-'use strict';
+ 'use strict';
 
+ define(
+   ["jquery",
+   "FileSaver",
+   "./options",
+   "./treebuilder",
+   "./printer"],
+   function($, saveAs, options, treebuilder, printer) {
 
+    var stage = {
+      'output': $('#output'),
+      'storyData': $('tw-storydata'),
+      'passageData': $("tw-passagedata"),
+      'title': $("tw-storydata").attr('name')
+    }
 
-define(
- ["jquery",
-  "FileSaver",
-  "./options"],
-  function($, saveAs, options) {
-
-    var documentElements = (function($) {
-      var _ = {
-        'output': $('#output'),
-        'storyData': $('tw-storydata'),
-        'passageData': $("tw-passagedata"),
-        'title': $("tw-storydata").attr('name')
-      }
-
-      return _;
-    }(jQuery));
-
-    console.log("Hi");
-    
     var idCount = 0;
-   
+
     var exports = {
       convert: function() {
-        var storyData = documentElements.storyData;
-        var output = $('#output');
-        var jsonString = this.export();
+        var storyData = stage.storyData;
+        var jsonObject = this.export();
 
-        if(jsonString === '') {
-          throw "History was empty and and could not be converted to JSON";
-        }
+        console.log("====== 'ORIGINAL, PLAIN' JSON OBJECT ======");
+        console.dir(jsonObject);
+        console.log("====== END JSON OBJECT ======");
+    
 
-        console.log(jsonString);
-
-        var originalJsonPlain = JSON.parse(jsonString);
-        var jsonPlain = originalJsonPlain;
-     
-        /* 
-        *  For each of the elements of jsonPlain
-        *  Check if it has one or more children
-        *  For each child
-        *  Loop through all elements of jsonPlain searching for the name of the child
-        *  Add to the parent.children array
-        */ 
         if(options.isHierarchical)
-        {      
-          var hierarchyJSON = [];
-
-          for(var i = 0; i < jsonPlain.length; i ++)
-          {
-            jsonPlain[i].children = [];
-            var childrenNames = jsonPlain[i].childrenNames;
-
-            if(childrenNames.constructor === Array)
-            {
-              if(childrenNames.length > 1)
-              {
-                var eachChildren = jsonPlain[i].childrenNames.split(',');
-              }
-              else 
-              {
-                var eachChildren = jsonPlain[i].childrenNames;
-              }
-
-              for(var k = 0; k < eachChildren.length; k++ )
-              {
-                for(var j = 0; j < jsonPlain.length; j++ )
-                {
-                  if(eachChildren[k] == "[["+jsonPlain[j].name+"]]")
-                  {
-                    jsonPlain[i].children.push(jsonPlain[j]);
-                  }
-                }
-              }
-              
-              hierarchyJSON.push(jsonPlain[i]);
-            
-            }
-          }
+        {   
+          var hierarchyJSON = treebuilder.build(jsonObject);
 
           if(this.isCyclic(hierarchyJSON[0]))
           {
-            output.val("Error: Cyclic reference found</h2><br>Cyclic references aren't allowed in hierarchical JSON structures.<br>Please set options.isHierarchical to false to use cyclic references.");
+            stage.output.val("Error: Cyclic reference found</h2><br>Cyclic references aren't allowed in hierarchical JSON structures.<br>Please set options.isHierarchical to false to use cyclic references.");
           }
           else
           {
-
             if(options.saveAsFile)
             {
-              this.saveAsFile("Title of Story",JSON.stringify(hierarchyJSON, null, 2));
+              this.saveAsFile(stage.title,JSON.stringify(hierarchyJSON, null, 4));
             }
 
-            output.val(JSON.stringify(hierarchyJSON, null, 2));
+            printer.syntaxHighlight(JSON.stringify(hierarchyJSON, null, 4)); 
+            //stage.output.html(JSON.stringify(hierarchyJSON, null, 4));
           }
-        
         }
         else
         {
           if(options.saveAsFile)
           {
-            this.saveAsFile("Title of Story",JSON.stringify(jsonPlain, null, 2));
+            this.saveAsFile(stage.title,JSON.stringify(jsonPlain, null, 2));
           }
 
-          output.val(JSON.stringify(jsonPlain, null, 2));
+          printer.syntaxHighlight(JSON.stringify(jsonPlain, null, 4));
+          //stage.output.html(JSON.stringify(jsonPlain, null, 4));
         }
       },
       
@@ -155,14 +105,14 @@ define(
       export: function() {
         var buffer = [];
 
-        var storyData = documentElements.storyData;
+        var storyData = stage.storyData;
 
         console.dir(storyData);
 
-        if (typeof storyData !== 'undefined')
+        /*if (typeof storyData !== 'undefined')
         {
-          buffer.push(this.buildPassage("StoryTitle","",documentElements.title));
-        }
+          buffer.push(this.buildPassage("StoryTitle", "", stage.title));
+        }*/
 
         /*
         var userScript = window.document.getElementById("twine-user-script");
@@ -178,14 +128,16 @@ define(
         }
         */
 
-        var passages = documentElements.passageData;
+        var passages = stage.passageData;
 
         for (var i = 0; i < passages.length; ++i)
         {
           buffer.push(this.buildPassageFromElement(passages[i], i, passages.length));
         }
 
-        return "[" + buffer.join(',') + "]";
+        var result = "[" + buffer.join(',') + "]";
+
+        return JSON.parse(result);
       },
       
       buildPassageFromElement: function(passage, index, howManyPassages) {
@@ -198,26 +150,33 @@ define(
         
         var name = passage.getAttribute("name");
 
-        if (!name)
+        if (typeof name === "undefined")
         {
           name = "Untitled Passage";
         }
 
+        var pid = passage.getAttribute("pid");
         var tags = passage.getAttribute("tags");
         var position = passage.getAttribute("position");
         var content = passage.textContent;
         
-        return this.buildPassage(name, tags, content, position || "", last);
+        return this.buildPassage(name, tags, content, position, last, pid);
       },
-  
-      buildPassage: function(title, tags, content, position, last) {
+
+      buildPassage: function(title, tags, content, position, last, pid) {
         var result = {};
 
-        options.exportID ? (result.id = idCount) : null;
+        options.exportID ? (result.pid = parseInt(pid)) : null;
 
-        idCount++;
-
-        options.exportPosition ? (result.position = position) : null;
+        if(options.exportPosition &&
+           typeof position !== 'undefined') {
+          position = position.split(',');
+          
+          result.position = {
+            x: parseInt(position[0]),
+            y: parseInt(position[1])
+          } 
+        } 
 
         result.name = title;
 
@@ -229,9 +188,7 @@ define(
         result.childrenNames = this.findChildren(clearedContent);
 
         options.exportFeatures ? (result.features = this.findFeatures(content)) : null;
-     
         options.exportOrder ? (result.order = this.findOrder(content)) : null;
-
         options.exportOtherProperties ? this.findOtherProperties(result, content, options.ignoreCustomProperties) : null;
 
         return JSON.stringify(result);
@@ -251,8 +208,8 @@ define(
 
           if(excluding.indexOf(property) == -1)
           {
-              var value = match[3].split(/(\r\n|\n|\r)/gm);
-              var valuesArray = [];
+            var value = match[3].split(/(\r\n|\n|\r)/gm);
+            var valuesArray = [];
 
               // <= 1 because carriage returns counts as one character
               for(var i = 0; i < value.length; i++)
@@ -274,22 +231,22 @@ define(
 
                 for(var j = 0; j < value.length; j++)
                 {
-                   propertiesJSON[j] = value[j];
-                }
+                 propertiesJSON[j] = value[j];
+               }
 
-                valuesArray.push(propertiesJSON);
+               valuesArray.push(propertiesJSON);
 
-                propertiesAdded += ','+NL;
-                propertiesAdded += TAB+'\"'+property+"\" :";
-                propertiesAdded += ""+JSON.stringify(valuesArray)+NL;
-              }
-          }
-        }
+               propertiesAdded += ','+NL;
+               propertiesAdded += TAB+'\"'+property+"\" :";
+               propertiesAdded += ""+JSON.stringify(valuesArray)+NL;
+             }
+           }
+         }
 
-        return propertiesAdded;
-      },
+         return propertiesAdded;
+       },
 
-      scrub: function(content, separator) {
+       scrub: function(content, separator) {
         if(content)
         {
           content = content.replace(/\"/gm, "\'");
@@ -390,7 +347,7 @@ define(
               featureJSON.separator = true;
               features[i] = features[i].substring(1);
             }
-    
+
             if(features[i][0] == "*")
             {
               featureJSON.star = true;
@@ -416,9 +373,9 @@ define(
 
         return JSON.stringify(featuresArray);
       }
-  };
+    };
 
-  exports.convert();
+    exports.convert();
 
-  return exports;
-});  
+    return exports;
+  });  
