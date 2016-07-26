@@ -23,7 +23,7 @@ define(function () {
         * http://twinery.org/wiki/twine2:how_to_create_links
         *
         */
-        realTitle(link) {
+        realTitle: function(link) {
             link = link.replace('[[','');
             link = link.replace(']]','');
             
@@ -57,12 +57,13 @@ define(function () {
         * but in the end we don't remove the objects that have no parent.
         *
         */
-        removeChildFromRoot(obj) {
+        removeChildFromRoot: function(obj) {
             for(var i = obj.length; i >= 0; i--)
             {
                 if(typeof obj[i] !== 'undefined')
                 {
-                    if (!('parentId' in obj[i]))
+                    // If there is a key 'parentId', remove this object
+                    if (('parentId' in obj[i]))
                     {
                         obj.splice(i,1);
                     }
@@ -84,6 +85,7 @@ define(function () {
 
             for(var i = 0; i < obj.length; i ++)
             {
+                debugger;
                 obj[i].children = [];
                 var childrenNames = obj[i].childrenNames;
 

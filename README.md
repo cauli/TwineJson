@@ -1,6 +1,9 @@
 # TwineJson
 TwineJson - Twine 2 JSON Exporter Utility Story Format
 
+[![Build Status](https://travis-ci.org/cauli/TwineJson.svg?branch=milestone-0.1)](https://travis-ci.org/cauli/TwineJson)
+<img alt="Badge" class="notice-badge" src="https://coveralls.io/repos/github/cauli/TwineJson/badge.svg?branch=master">
+
 Based on Entweedle by Michael McCollum
 http://www.maximumverbosity.net/twine/Entweedle/
 

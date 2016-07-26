@@ -7,6 +7,8 @@ if (typeof define !== 'function') {
 var requirejs = require("requirejs");
 var expect = require('chai').expect;
 
+
+
 requirejs.config({
     "baseUrl": "js/app",
     "paths": {
@@ -25,6 +27,8 @@ describe('Mocha is running', function () {
 
 requirejs(['./treebuilder'],
 	function   (treebuilder) {
+
+
 
 		describe('Treebuilder \'realTitle\' tests', function () {
    		it('Treebuilder exists', function () {
@@ -54,7 +58,7 @@ requirejs(['./treebuilder'],
    	});
 
     describe('Treebuilder \'removeChildFromRoot\' tests', function () {
-			var nothingToRemove = [
+			var removeEverything = [
 				{
 					parentId: 1
 				},
@@ -63,16 +67,18 @@ requirejs(['./treebuilder'],
 				}
 			];
 
+			var emptyArray = []
+
 			var singleObj = [{
-				parentId:1
+				id:1
 			}]
 
 		  var removeSecond = [
 				{
-					parentId: 1
+					id: 1
 				},
 				{
-					id: 2
+					parentId: 2
 				}
 			];
 
@@ -92,8 +98,8 @@ requirejs(['./treebuilder'],
 			];
 
  			it('\'removeChildFromRoot\' can handle a simple array of objects', function () {
-				expect(treebuilder.removeChildFromRoot(nothingToRemove)).to.have.length(2);
-				expect(treebuilder.removeChildFromRoot(nothingToRemove)).to.be.equal(nothingToRemove);
+				expect(treebuilder.removeChildFromRoot(removeEverything)).to.have.length(0);
+				expect(JSON.stringify(treebuilder.removeChildFromRoot(removeEverything))).to.be.equal('[]');
 			});
 
  			it('\'removeChildFromRoot\' removes nothing from single object', function () {
@@ -101,15 +107,64 @@ requirejs(['./treebuilder'],
 				expect(treebuilder.removeChildFromRoot(singleObj)).to.be.equal(singleObj);
 			});
 
-			it('\'removeChildFromRoot\' removes second object without parentId', function () {
+			it('\'removeChildFromRoot\' removes second object with parentId', function () {
 				expect(JSON.stringify(treebuilder.removeChildFromRoot(removeSecond))).to.be.equal(JSON.stringify(singleObj));
 			});
+   	});
 
-			it('\'removeChildFromRoot\' removes first object without parentId', function () {
-				expect(JSON.stringify(treebuilder.removeChildFromRoot(removeFirst))).to.be.equal(JSON.stringify(removeFirstExpected));
+
+   	describe('Treebuilder \'build\' tests', function () {
+
+			var testStoryPlain = [
+			  {
+			    "pid": 1,
+			    "position": {
+			      "x": 702,
+			      "y": 326
+			    },
+			    "name": "Night",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "[[test|Another Passage]]",
+			    "childrenNames": [
+			      "[[test|Another Passage]]"
+			    ]
+			  },
+			  {
+			    "pid": 2,
+			    "position": {
+			      "x": 891,
+			      "y": 452
+			    },
+			    "name": "Another Passage",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "test \t\t[[Well!|Ending Passage]] \t\t",
+			    "childrenNames": [
+			      "[[Well!|Ending Passage]]"
+			    ]
+			  },
+			  {
+			    "pid": 3,
+			    "position": {
+			      "x": 1057,
+			      "y": 574
+			    },
+			    "name": "Ending Passage",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "THE END \t\t",
+			    "childrenNames": []
+			  }
+			]
+
+ 			it('\'build\' properly creates a simple hierarchical story', function () {
+				expect(treebuilder.build(testStoryPlain)).to.have.length(1);
+				expect(treebuilder.build(testStoryPlain)[0].pid).to.be.equal(1);
 			});
-
-
    	});
   }
 );

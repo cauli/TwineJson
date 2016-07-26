@@ -16,7 +16,7 @@
 */
 
 define(
-    ["jquery"],
+    [],
     function () {
 
     var stage = {

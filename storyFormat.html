@@ -1,8 +1,38 @@
-<html><head><title>Test [a||b]</title></head><body><script type=text/javascript>window.onload=function(){if("undefined"==typeof window.TwineJson){var e=0,t="",r="",n={isHierarchical:!0,exportOrder:!0,exportFeatures:!0,exportID:!0,exportOtherProperties:!0,exportPosition:!0,excludeOtherProperties:["features","order"],saveAsFile:!0,minified:!0},i=i||function(e){"use strict";if(!("undefined"==typeof e||"undefined"!=typeof navigator&&/MSIE [1-9]\./.test(navigator.userAgent))){var t=e.document,r=function(){return e.URL||e.webkitURL||e},n=t.createElementNS("http://www.w3.org/1999/xhtml","a"),i="download"in n,s=function(e){var t=new MouseEvent("click");e.dispatchEvent(t)},o=/constructor/i.test(e.HTMLElement),a=/CriOS\/[\d]+/.test(navigator.userAgent),u=function(t){(e.setImmediate||e.setTimeout)(function(){throw t},0)},l="application/octet-stream",d=4e4,f=function(e){var t=function(){"string"==typeof e?r().revokeObjectURL(e):e.remove()};setTimeout(t,d)},c=function(e,t,r){t=[].concat(t);for(var n=t.length;n--;){var i=e["on"+t[n]];if("function"==typeof i)try{i.call(e,r||e)}catch(s){u(s)}}},p=function(e){return/^\s*(?:text\/\S*|application\/xml|\S*\/\S*\+xml)\s*;.*charset\s*=\s*utf-8/i.test(e.type)?new Blob([String.fromCharCode(65279),e],{type:e.type}):e},h=function(t,u,d){d||(t=p(t));var h,g=this,v=t.type,m=v===l,w=function(){c(g,"writestart progress write writeend".split(" "))},y=function(){if((a||m&&o)&&e.FileReader){var n=new FileReader;return n.onloadend=function(){var t=a?n.result:n.result.replace(/^data:[^;]*;/,"data:attachment/file;"),r=e.open(t,"_blank");r||(e.location.href=t),t=void 0,g.readyState=g.DONE,w()},n.readAsDataURL(t),void(g.readyState=g.INIT)}if(h||(h=r().createObjectURL(t)),m)e.location.href=h;else{var i=e.open(h,"_blank");i||(e.location.href=h)}g.readyState=g.DONE,w(),f(h)};return g.readyState=g.INIT,i?(h=r().createObjectURL(t),void setTimeout(function(){n.href=h,n.download=u,s(n),w(),f(h),g.readyState=g.DONE})):void y()},g=h.prototype,v=function(e,t,r){return new h(e,t||e.name||"download",r)};return"undefined"!=typeof navigator&&navigator.msSaveOrOpenBlob?function(e,t,r){return t=t||e.name||"download",r||(e=p(e)),navigator.msSaveOrOpenBlob(e,t)}:(g.abort=function(){},g.readyState=g.INIT=0,g.WRITING=1,g.DONE=2,g.error=g.onwritestart=g.onprogress=g.onwrite=g.onabort=g.onerror=g.onwriteend=null,v)}}("undefined"!=typeof self&&self||"undefined"!=typeof window&&window||this.content);"undefined"!=typeof module&&module.exports?module.exports.saveAs=i:"undefined"!=typeof define&&null!==define&&null!==define.amd&&define([],function(){return i}),window.TwineJson={saveAsFile:function(e,t){var r=new Blob([t],{type:"text/json;charset=utf-8"});i(r,e.replace(/[^a-z0-9]/gi,"").toLowerCase()+"-"+Math.floor(Date.now()/1e3)+".json")},isCyclic:function(e){function t(e){if(e&&"object"==typeof e){if(r.indexOf(e)!==-1)return!0;r.push(e);for(var n in e)if(e.hasOwnProperty(n)&&t(e[n]))return console.error(e,"Found cycle at "+n),!0}return!1}var r=[];return t(e)},convert:function(){var e=window.document.getElementsByTagName("tw-storydata"),i=window.document.getElementById("output"),s=this["export"](),o=JSON.parse(s),a=o;if(n.minified||(t="\r\n",r="\t"),n.isHierarchical){for(var u=[],l=0;l<a.length;l++)if(a[l].children=[],""!==a[l].childrenNames){for(var d=a[l].childrenNames.split(","),f=0;f<d.length;f++)for(var c=0;c<a.length;c++)d[f]=="[["+a[c].name+"]]"&&a[l].children.push(a[c]);u.push(a[l])}this.isCyclic(u[0])?i.innerHTML="<h2>Error: Cyclic reference found</h2><br>Cyclic references aren't allowed in hierarchical JSON structures.<br>Please set ExportOptions.isHierarchical to false to use cyclic references.":(console.dir(u[0]),i.innerHTML=JSON.stringify(u[0]),n.saveAsFile&&this.saveAsFile(e[0].getAttribute("name"),JSON.stringify(u[0])))}else n.saveAsFile&&this.saveAsFile(e[0].getAttribute("name"),JSON.stringify(a)),i.innerHTML=JSON.stringify(a)},"export":function(){var e=[];e.push("["+t);var r=window.document.getElementsByTagName("tw-storydata");r&&e.push(this.buildPassage("StoryTitle","",r[0].getAttribute("name")));var n=window.document.getElementById("twine-user-script");n&&e.push(this.buildPassage("UserScript","script",n.innerHTML));var i=window.document.getElementById("twine-user-stylesheet");i&&e.push(this.buildPassage("UserStylesheet","stylesheet",i.innerHTML));for(var s=window.document.getElementsByTagName("tw-passagedata"),o=0;o<s.length;++o)e.push(this.buildPassageFromElement(s[o],o,s.length));return e.push("]"+t),e.join("")},buildPassageFromElement:function(e,t,r){var n=!1;t+1==r&&(n=!0);var i=e.getAttribute("name");i||(i="Untitled Passage");var s=e.getAttribute("tags"),o=e.getAttribute("position"),a=e.textContent;return this.buildPassage(i,s,a,o||"",n)},buildPassage:function(i,s,o,a,u){var l=[];l.push("{"+t),n.exportID&&(l.push(r+'"id":'),l.push('"',e++,'"')),n.exportPosition&&(l.push(","+t),l.push(r+'"position":'),l.push('"',a,'"')),l.push(","+t),l.push(r+'"name":'),l.push('"',i,'"'),s&&(l.push(","+t),l.push(r+'"tags":'),l.push('"[',s,']"'));var d=this.scrub(o," ");return l.push(","+t),l.push(r+'"content":'),l.push('"',d,'"'),l.push(","+t),l.push(r+'"childrenNames":'),l.push('"',this.findChildren(d),'"'),n.exportFeatures&&(l.push(","+t),l.push(r+'"features" :'),l.push("",this.findFeatures(o),"")),n.exportOrder&&(l.push(","+t),l.push(r+'"order" :'),l.push("",this.findOrder(o),"")),n.exportOtherProperties&&l.push(this.findOtherProperties(o,n.excludeOtherProperties)),u?l.push("}"+t):l.push("},"+t),l.join("")},findOtherProperties:function(e,n){for(var i,s="",o=/\{\{((\s|\S)+?)\}\}((\s|\S)+?)\{\{\/\1\}\}/gm;null!==(i=o.exec(e));){var a=i[1];if(n.indexOf(a)==-1){for(var u=i[3].split(/(\r\n|\n|\r)/gm),l=[],d=0;d<u.length;d++)u[d].length<=1&&(u.splice(d,1),d=-1);if(1===u.length)s+=","+t,s+=r+'"'+a+'" :',s+='"'+u[0]+'"'+t;else{for(var f={},c=0;c<u.length;c++)f[c]=u[c];l.push(f),s+=","+t,s+=r+'"'+a+'" :',s+=""+JSON.stringify(l)+t}}}return s},scrub:function(e,t){return e&&(e=e.replace(/\"/gm,"'"),e=e.replace(/(\r\n|\n|\r)/gm,t)),e},findChildren:function(e){for(var t,r=/\[\[(.+?)\]\]/gm,n=[];null!==(t=r.exec(e));)n.push(t[0]);return n},findOrder:function(e){for(var t,r=/\{\{order\}\}((\s|\S)+?)\{\{\/order\}\}/gm,n=[];null!==(t=r.exec(e));){for(var i=t[1].split(/(\r\n|\n|\r)/gm),s=0;s<i.length;s++)i[s].length<=1&&(i.splice(s,1),s=-1);for(var o=0;o<i.length;o++)featureJSON.order=i[o],n.push(featureJSON)}return JSON.stringify(n)},findFeatures:function(e){for(var t,r=/\{\{features\}\}((\s|\S)+?)\{\{\/features\}\}/gm,n=[];null!==(t=r.exec(e));){for(var i=t[1].split(/(\r\n|\n|\r)/gm),s=0;s<i.length;s++)i[s].length<=1&&(i.splice(s,1),s=-1);for(var o=0;o<i.length;o++){var a=/\(([^)]+)\)/,u=a.exec(i[o]),l={};null!==u&&u[1]&&(i[o]=i[o].replace(/\(([^)]+)\)/gi,""),l.subtitle=u[1]),":"==i[o][0]&&(l.separator=!0,i[o]=i[o].substring(1)),"*"==i[o][0]&&(l.star=!0,i[o]=i[o].substring(1)),"+"==i[o][0]&&(l.delta=!0,i[o]=i[o].substring(1)),"-"==i[o][0]&&(l.optional=!0,i[o]=i[o].substring(1)),l.name=i[o],n.push(l)}}return JSON.stringify(n)}}}window.TwineJson.convert()};</script><pre id=output></pre><div id=storyData style="display: none;"><tw-storydata name="Test ||" startnode="1" creator="Twine" creator-version="2.0.11" ifid="1F7F0675-339C-4CDF-952C-FB0A8D778EE1" format="TwineJson" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script><tw-passagedata pid="1" name="Night" tags="" position="702,326">[[test|Another Passage]]</tw-passagedata>
-<tw-passagedata pid="2" name="Another Passage" tags="" position="891,452">test
-[[Well!|Ending Passage]]
-</tw-passagedata>
-<tw-passagedata pid="3" name="Ending Passage" tags="" position="1057,574">THE END
-</tw-passagedata>
-</tw-storydata>
-</div></body></html>
+<html><head><title>{{STORY_NAME}}</title>
+
+		<style>
+			body {
+				font-family: sans-serif;
+			}
+
+			textarea {
+				background-color: #eaeaea;
+				width:50%;
+				min-height: 200px;
+				border-radius: 5px;
+				overflow-y: auto;
+			}
+
+			pre {outline: 1px solid #ccc; 
+				   padding: 5px; 
+				   margin: 5px; 
+				 	 height: 100%;}
+			.string { color: green; }
+			.number { color: darkorange; }
+			.boolean { color: blue; }
+			.null { color: magenta; }
+			.key { color: red; }
+
+			textarea {
+				height: 1px;
+				display: block;
+				width:1px;
+				position:absolute;
+				left:999px;
+			}
+		</style>
+		<script type='text/javascript'>@@include('./build/out.js')</script>
+	</head>
+	</head><body><h1>TwineJson results</h1>
+		<h3>JSON output</h3><pre id='output'></pre><div id='storyData' style='display: none;'>{{STORY_DATA}}</div>
+	</body></html>

@@ -12,12 +12,12 @@
  'use strict';
 
  define(
-   ["jquery",
+   [
    "FileSaver",
    "./options",
    "./treebuilder",
    "./printer"],
-   function($, saveAs, options, treebuilder, printer) {
+   function(saveAs, options, treebuilder, printer) {
 
     var stage = {
       'output': $('#output'),

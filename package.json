@@ -1,8 +1,26 @@
-{
+ {
   "name": "TwineJson",
-  "version": "0.0.8",
   "description": "Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
+  "version": "0.0.13",
+  "author": "Cauli Tomaz",
+  "license": "MIT",
   "main": "format.js",
+  "devDependencies": {
+    "amdefine": "^1.0.0",
+    "chai": "^3.5.0",
+    "gulp": "^3.9.1",
+    "gulp-clean": "^0.3.2",
+    "gulp-debug": "^2.1.2",
+    "gulp-file-includer": "^1.0.0",
+    "gulp-js-escape": "^1.0.1",
+    "gulp-jslint": "^1.0.1",
+    "gulp-minify-html": "^1.0.6",
+    "gulp-shell": "^0.5.2",
+    "gulp-uglify": "^1.5.4",
+    "mocha": "^2.5.3",
+    "requirejs": "^2.2.0",
+    "run-sequence": "^1.2.2"
+  },
   "scripts": {
     "test": "mocha"
   },
@@ -16,21 +34,5 @@
   "dependencies": {
     "es6-shim": "latest",
     "jquery": "latest"
-  },
-  "author": "Cauli Tomaz",
-  "license": "MIT",
-  "devDependencies": {
-    "amdefine": "^1.0.0",
-    "chai": "^3.5.0",
-    "gulp": "^3.9.1",
-    "gulp-clean": "^0.3.2",
-    "gulp-file-includer": "^1.0.0",
-    "gulp-js-escape": "^1.0.1",
-    "gulp-jslint": "^1.0.1",
-    "gulp-minify-html": "^1.0.6",
-    "gulp-uglify": "^1.5.4",
-    "mocha": "^2.5.3",
-    "requirejs": "^2.2.0",
-    "run-sequence": "^1.2.2"
   }
 }
