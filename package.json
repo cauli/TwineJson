@@ -1,7 +1,7 @@
  {
   "name": "TwineJson",
   "description": "Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
-  "version": "0.0.13",
+  "version": "0.1",
   "author": "Cauli Tomaz",
   "license": "MIT",
   "main": "format.js",

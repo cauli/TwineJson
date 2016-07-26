@@ -1,6 +1,6 @@
 window.storyFormat({
 	"name":"TwineJson",
-	"version":"0.0.13",
+	"version":"0.1",
 	"author":"<a href='http://cau.li'>Cauli Tomaz</a>",
 	"description":"Free utility format to export your story into JSON format. Based on Entweedle by Michael McCollum",
 	"image":"icon.svg",
