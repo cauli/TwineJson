@@ -1,8 +1,16 @@
-<html><head><title>{{STORY_NAME}}</title>
-
+<html>
+	<head>
+		<title>{{STORY_NAME}}</title>
 		<style>
 			body {
 				font-family: sans-serif;
+				padding: 50px;
+				background-color: #eee8d5;
+				color: #586e75;
+			}
+
+			h1, h2 {
+				color: #073642;
 			}
 
 			textarea {
@@ -13,16 +21,6 @@
 				overflow-y: auto;
 			}
 
-			pre {outline: 1px solid #ccc; 
-				   padding: 5px; 
-				   margin: 5px; 
-				 	 height: 100%;}
-			.string { color: green; }
-			.number { color: darkorange; }
-			.boolean { color: blue; }
-			.null { color: magenta; }
-			.key { color: red; }
-
 			textarea {
 				height: 1px;
 				display: block;
@@ -30,9 +28,61 @@
 				position:absolute;
 				left:999px;
 			}
+
+			main.wrapper {
+				margin: auto;
+				display: block;
+				max-width: 1200px;
+			}
+
+			pre {
+				outline: 1px solid #ccc; 
+				padding: 5px; 
+				margin: 5px; 
+				height: 50%;
+				min-height: 200px;
+				white-space: pre-wrap;       /* Since CSS 2.1 */
+				white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+				white-space: -pre-wrap;      /* Opera 4-6 */
+				white-space: -o-pre-wrap;    /* Opera 7 */
+				word-wrap: break-word;       /* Internet Explorer 5.5+ */
+				overflow-y:scroll;
+				color: #657b83;
+				font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+				text-align: left;
+				line-height: 1.5;
+				background-color: #002b37;
+		  }
+
+			.string { color: #2aa198; }
+			.number { color: #cb4b16; }
+			.boolean { color: #6c71c4; }
+			.null { color: #b58900; }
+			.key { color: #859900; }
+
+
+			.invalid {
+				max-height: 100px;
+			}
+		</style>
 		</style>
 		<script type='text/javascript'>@@include('./build/out.js')</script>
 	</head>
-	</head><body><h1>TwineJson results</h1>
-		<h3>JSON output</h3><pre id='output'></pre><div id='storyData' style='display: none;'>{{STORY_DATA}}</div>
-	</body></html>
+	</head>
+		<body>
+		<main class='wrapper'>
+			<h2>TwineJson results</h1>
+			
+			<hr>
+
+			<h3>Hierarchical JSON output (Whole tree)</h3>
+			<pre id='output'>
+			</pre>
+
+		  <h3>Plain JSON output</h3>
+			<pre id='outputPlain'>
+			</pre>
+		</main>
+		<div id='storyData' style='display: none;'>{{STORY_DATA}}</div>
+	</body>
+</html>

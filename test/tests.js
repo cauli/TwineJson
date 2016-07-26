@@ -7,8 +7,6 @@ if (typeof define !== 'function') {
 var requirejs = require("requirejs");
 var expect = require('chai').expect;
 
-
-
 requirejs.config({
     "baseUrl": "js/app",
     "paths": {
@@ -161,9 +159,60 @@ requirejs(['./treebuilder'],
 			  }
 			]
 
+			var testStoryWithBifurcation = [
+			  {
+			    "pid": 1,
+			    "name": "A",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "[[b]] \t\t",
+			    "childrenNames": [
+			      "[[b]]"
+			    ]
+			  },
+			  {
+			    "pid": 2,
+			    "name": "b",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "[[c]] \t\t[[d->d1]] \t\t",
+			    "childrenNames": [
+			      "[[c]]",
+			      "[[d->d1]]"
+			    ]
+			  },
+			  {
+			    "pid": 3,
+			    "name": "c",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "C content \t\t",
+			    "childrenNames": []
+			  },
+			  {
+			    "pid": 4,
+			    "name": "d1",
+			    "tags": [
+			      ""
+			    ],
+			    "content": "d1 content \t\t",
+			    "childrenNames": []
+			  }
+			]
+
  			it('\'build\' properly creates a simple hierarchical story', function () {
 				expect(treebuilder.build(testStoryPlain)).to.have.length(1);
 				expect(treebuilder.build(testStoryPlain)[0].pid).to.be.equal(1);
+			});
+
+			 it('\'build\' properly creates a bifurcated hierarchical story', function () {
+				expect(treebuilder.build(testStoryWithBifurcation)).to.have.length(1);
+				expect(treebuilder.build(testStoryWithBifurcation)[0].pid).to.be.equal(1);
+				expect(treebuilder.build(testStoryWithBifurcation)[0].children[0].children.length).to.be.equal(2);
+				expect(treebuilder.build(testStoryWithBifurcation)[0].children[0].children[1].name).to.be.equal("d1");
 			});
    	});
   }

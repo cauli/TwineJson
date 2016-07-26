@@ -21,6 +21,7 @@
 
     var stage = {
       'output': $('#output'),
+      'outputPlain': $('#outputPlain'),
       'storyData': $('tw-storydata'),
       'passageData': $("tw-passagedata"),
       'title': $("tw-storydata").attr('name')
@@ -32,41 +33,36 @@
       convert: function() {
         var storyData = stage.storyData;
         var jsonObject = this.export();
+        var _jsonObject = JSON.parse(JSON.stringify(jsonObject))
 
         console.log("====== 'ORIGINAL, PLAIN' JSON OBJECT ======");
         console.dir(jsonObject);
         console.log("====== END JSON OBJECT ======");
-    
+  
+        var hierarchyJSON = treebuilder.build(jsonObject);
 
-        if(options.isHierarchical)
-        {   
-          var hierarchyJSON = treebuilder.build(jsonObject);
-
-          if(this.isCyclic(hierarchyJSON[0]))
-          {
-            stage.output.val("Error: Cyclic reference found</h2><br>Cyclic references aren't allowed in hierarchical JSON structures.<br>Please set options.isHierarchical to false to use cyclic references.");
-          }
-          else
-          {
-            if(options.saveAsFile)
-            {
-              this.saveAsFile(stage.title,JSON.stringify(hierarchyJSON, null, 4));
-            }
-
-            printer.syntaxHighlight(JSON.stringify(hierarchyJSON, null, 4)); 
-            //stage.output.html(JSON.stringify(hierarchyJSON, null, 4));
-          }
+        if(hierarchyJSON.length === 0)
+        {
+          printer.syntaxHighlight("Stories with cyclic references aren't allowed in hierarchical JSON structures", $('#output'));
+          $('#output').addClass('invalid');
         }
         else
         {
           if(options.saveAsFile)
           {
-            this.saveAsFile(stage.title,JSON.stringify(jsonPlain, null, 2));
+            this.saveAsFile("hierarchical-"+stage.title,JSON.stringify(hierarchyJSON, null, 4));
           }
 
-          printer.syntaxHighlight(JSON.stringify(jsonPlain, null, 4));
-          //stage.output.html(JSON.stringify(jsonPlain, null, 4));
+          printer.syntaxHighlight(JSON.stringify(hierarchyJSON, null, 4), $('#output'));
+            $('#output').removeClass('invalid');
         }
+     
+        if(options.saveAsFile)
+        {
+          this.saveAsFile("plain-"+stage.title,JSON.stringify(_jsonObject, null, 2));
+        }
+
+        printer.syntaxHighlight(JSON.stringify(_jsonObject, null, 4), $('#outputPlain'));
       },
       
       saveAsFile: function(title, text) {

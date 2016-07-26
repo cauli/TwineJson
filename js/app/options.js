@@ -31,8 +31,6 @@ define(function () {
     'exportID':true,
     // Export unknown properties inside {{property}}{{/property}} tags
     'exportCustomProperties':true,
-    // Export X,Y position from Twine to the Json, allowing a pretty import later on
-    'exportPosition':true,
     // Exclude these properties from CustomProperties Export.
     // Expected input: ['property1','property2','...','propertyN'];
     'customPropertiesToIgnore':['features','order'],

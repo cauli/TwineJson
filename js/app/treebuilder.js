@@ -81,24 +81,19 @@ define(function () {
         *
         */ 
         build: function(obj) {
+
+            console.log(JSON.stringify(obj, null, 2));
+
             var hierarchicalObj = [];
 
             for(var i = 0; i < obj.length; i ++)
             {
-                debugger;
                 obj[i].children = [];
                 var childrenNames = obj[i].childrenNames;
 
                 if(childrenNames.constructor === Array)
                 {              
-                    if(childrenNames.length > 1)
-                    {
-                        var eachChildren = obj[i].childrenNames.split(',');
-                    }
-                    else 
-                    {
-                        var eachChildren = obj[i].childrenNames;
-                    }
+                    var eachChildren = obj[i].childrenNames;
 
                     for(var k = 0; k < eachChildren.length; k++ )
                     {
