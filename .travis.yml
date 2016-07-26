@@ -1,4 +1,7 @@
+language: node_js
+node_js:
+  - "6.1"
 install:
-- npm install
-- mocha
-- gulp
+  - npm install
+  - mocha
+  - gulp
