@@ -82,7 +82,7 @@ define(function () {
         */ 
         build: function(obj) {
 
-            console.log(JSON.stringify(obj, null, 2));
+            //console.log(JSON.stringify(obj, null, 2));
 
             var hierarchicalObj = [];
 

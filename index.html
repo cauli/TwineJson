@@ -22,22 +22,26 @@
 				overflow-y: auto;
 			}
 
-			pre {outline: 1px solid #ccc; 
-				   padding: 5px; 
-				   margin: 5px; 
-				 	 height: 50%;
-				 	 min-height: 200px;
-				 	 white-space: pre-wrap;       /* Since CSS 2.1 */
-			     white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
-			     white-space: -pre-wrap;      /* Opera 4-6 */
-			     white-space: -o-pre-wrap;    /* Opera 7 */
-			     word-wrap: break-word;       /* Internet Explorer 5.5+ */
-			   	 overflow-y:scroll;
-				   color: #657b83;
-				   font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
-				   text-align: left;
-				   line-height: 1.5;
-				 	 background-color: #002b37;}
+			pre {
+				outline: 1px solid #ccc; 
+		    padding: 5px; 
+		    margin: 5px; 
+		 	  height: 50%;
+		 	  min-height: 200px;
+		 	  white-space: pre-wrap;       /* Since CSS 2.1 */
+	      white-space: -moz-pre-wrap;  /* Mozilla, since 1999 */
+	      white-space: -pre-wrap;      /* Opera 4-6 */
+	      white-space: -o-pre-wrap;    /* Opera 7 */
+	      word-wrap: break-word;       /* Internet Explorer 5.5+ */
+	   	  overflow-y:scroll;
+		    color: #657b83;
+		    font-family: Consolas, Monaco, 'Andale Mono', 'Ubuntu Mono', monospace;
+		    text-align: left;
+		    font-size:11px;
+		    line-height: 1.5;
+		 	  background-color: #002b37;
+		 	}
+
 			.string { color: #2aa198; }
 			.number { color: #cb4b16; }
 			.boolean { color: #6c71c4; }
@@ -65,9 +69,9 @@
 
 	</head>
 
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 	<script src="node_modules/requirejs/require.js"></script>
 	<script src="js/index.js"></script>
-	<script src="http://ajax.googleapis.com/ajax/libs/jquery/2.0.0/jquery.min.js"></script>
 
 	<body>
 		<main class='wrapper'>
@@ -85,8 +89,45 @@
 		</main>
 		<div id='storyData' style="display: none;"><tw-storydata name="Test" startnode="1" creator="Twine" creator-version="2.0.11" ifid="1F7F0675-339C-4CDF-952C-FB0A8D778EE1" format="TwineJson" options="" hidden><style role="stylesheet" id="twine-user-stylesheet" type="text/twine-css"></style><script role="script" id="twine-user-script" type="text/twine-javascript"></script>
 		
+		<!-- complexity 2, with variables -->
+		<tw-passagedata pid="1" name="You see a distant castle" tags="" position="113,130">{{text}}
+There is a distant castle
+long after the fores
+up the hill.
+{{/text}}
+
+{{uncanny}}
+true
+{{/uncanny}}
+
+[[Go to the bridge]]</tw-passagedata>
+<tw-passagedata pid="2" name="Middle" tags="" position="290,131">{{text}}
+You ran to the middle of the hall
+{{/text}}
+
+[[Run Away]]
+[[Fight against him]]</tw-passagedata>
+<tw-passagedata pid="3" name="Run Away" tags="" position="289,281">Double-click this passage to edit it.</tw-passagedata>
+<tw-passagedata pid="4" name="Fight against him" tags="" position="450,131">[[Get the sword form the floor!]]
+
+</tw-passagedata>
+<tw-passagedata pid="5" name="The emperor awaits" tags="" position="449,281">[[Fight against him]]
+[[Run away]]
+</tw-passagedata>
+<tw-passagedata pid="6" name="Go to the bridge" tags="" position="113,280">[[Enter the gates]]
+</tw-passagedata>
+<tw-passagedata pid="7" name="Enter the gates" tags="" position="291,412">[[The emperor awaits]]</tw-passagedata>
+<tw-passagedata pid="8" name="Get the sword form the floor!" tags="" position="611,130">{{text}}
+He strikes you in the head,
+you are dead
+{{/text}}
+
+{{end}}
+true
+{{/end}}</tw-passagedata>
+
 		<!-- cyclic -->
-		<tw-passagedata pid="1" name="A" tags="" position="627,314">[[b]]
+		<!--<tw-passagedata pid="1" name="A" tags="" position="627,314">[[b]]
 		</tw-passagedata>
 		<tw-passagedata pid="2" name="b" tags="" position="981,409">[[c]]
 		[[d-&gt;d1]]
@@ -95,6 +136,7 @@
 		<tw-passagedata pid="4" name="d1" tags="" position="632,568">[[A]]
 		</tw-passagedata>
 		</tw-storydata>
+		-->
 
 		<!-- bifurcated -->
 		<!--

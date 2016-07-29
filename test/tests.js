@@ -4,6 +4,7 @@ if (typeof define !== 'function') {
     var define = require('amdefine')(module);
 }
 
+var fs = require("fs");
 var requirejs = require("requirejs");
 var expect = require('chai').expect;
 
@@ -23,8 +24,8 @@ describe('Mocha is running', function () {
 });
 
 
-requirejs(['./treebuilder'],
-	function   (treebuilder) {
+requirejs(['./treebuilder', './converter'],
+	function   (treebuilder, converter) {
 
 
 
@@ -110,6 +111,15 @@ requirejs(['./treebuilder'],
 			});
    	});
 
+
+    describe('TwineJosn \'export\'  tests', function () {
+		  it('Reads story file', function(done) {
+		    fs.readFile('./test/stories/castle.xml', function(err, data) {		      
+		      if (err) { throw "Unable to read file"; }
+		      done();
+		    });
+		  });
+    });
 
    	describe('Treebuilder \'build\' tests', function () {
 
@@ -204,16 +214,20 @@ requirejs(['./treebuilder'],
 			]
 
  			it('\'build\' properly creates a simple hierarchical story', function () {
-				expect(treebuilder.build(testStoryPlain)).to.have.length(1);
-				expect(treebuilder.build(testStoryPlain)[0].pid).to.be.equal(1);
+				var story = treebuilder.build(testStoryPlain);
+				
+				expect(story).to.have.length(1);
+				expect(story[0].pid).to.be.equal(1);
 			});
 
-			 it('\'build\' properly creates a bifurcated hierarchical story', function () {
-				expect(treebuilder.build(testStoryWithBifurcation)).to.have.length(1);
-				expect(treebuilder.build(testStoryWithBifurcation)[0].pid).to.be.equal(1);
-				expect(treebuilder.build(testStoryWithBifurcation)[0].children[0].children.length).to.be.equal(2);
-				expect(treebuilder.build(testStoryWithBifurcation)[0].children[0].children[1].name).to.be.equal("d1");
-			});
+			it('\'build\' properly creates a bifurcated hierarchical story', function () {
+				var story = treebuilder.build(testStoryWithBifurcation);
+
+				expect(story).to.have.length(1);
+				expect(story[0].pid).to.be.equal(1);
+				expect(story[0].children[0].children.length).to.be.equal(2);
+				expect(story[0].children[0].children[1].name).to.be.equal("d1");
+			});		     	
    	});
   }
 );
