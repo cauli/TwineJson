@@ -1,11 +1,11 @@
 # TwineJson
 TwineJson - Twine 2 JSON Exporter Utility Story Format
 
-[![Build Status](https://travis-ci.org/cauli/TwineJson.svg?branch=milestone-0.1)](https://travis-ci.org/cauli/TwineJson)
-<img alt="Badge" class="notice-badge" src="https://coveralls.io/repos/github/cauli/TwineJson/badge.svg?branch=master">
+[![Build Status](https://travis-ci.org/cauli/TwineJson.svg?branch=master)](https://travis-ci.org/cauli/TwineJson)
 
-Based on Entweedle by Michael McCollum
-http://www.maximumverbosity.net/twine/Entweedle/
+## Demo
+
+![Demo](http://cau.li/TwineJson/tutorial/sample.gif)
 
 ## How to Use
 
@@ -17,17 +17,17 @@ Add this URL as your story format
 
 Long version:
 
-[Step 1 - At the main screen, click on Formats](http://cau.li/TwineJson/tutorial/1.png)
+[Step 1 - At the main screen, click on Formats](https://cau.li/TwineJson/tutorial/1.png)
 
-[Step 2 - Select the tab Add new Format, then paste the URL (http://cau.li/TwineJson/format.js)](http://cau.li/TwineJson/tutorial/2.png)
+[Step 2 - Select the tab Add new Format, then paste the URL (https://cau.li/TwineJson/format.js)](https://cau.li/TwineJson/tutorial/2.png)
 
-[Step 3 (Optional) - Back to the Story Formats tabs, favorite TwineJson to default it](http://cau.li/TwineJson/tutorial/3.png)
+[Step 3 (Optional) - Back to the Story Formats tabs, favorite TwineJson to default it](https://cau.li/TwineJson/tutorial/3.png)
 
-[Step 4 - Inside the editing menu (Blue Screen), select the name of your project at the bottom of the screen, and then Change Story Format](http://cau.li/TwineJson/tutorial/4.png)
+[Step 4 - Inside the editing menu (Blue Screen), select the name of your project at the bottom of the screen, and then Change Story Format](https://cau.li/TwineJson/tutorial/4.png)
 
-[Step 5 - Confirm that TwineJson is selected](http://cau.li/TwineJson/tutorial/5.png)
+[Step 5 - Confirm that TwineJson is selected](https://cau.li/TwineJson/tutorial/5.png)
 
-[Step 6 - Press Play to export your Json file](http://cau.li/TwineJson/tutorial/6.png)
+[Step 6 - Press Play to export your Json file](https://cau.li/TwineJson/tutorial/6.png)
 
 
 ## How to Build It
@@ -36,6 +36,8 @@ Long version:
 $ npm install --global gulp-cli #install gulp if you don't have already
 
 $ npm install #installs all dependencies specified on package.json
+
+$ mocha #to run test cases
 
 $ gulp
 ```
@@ -47,14 +49,6 @@ Your file format will be created on the `./dist/format.js` folder.
 TwineJson exports Twine2 projects to JSON, adding information that goes beyond plaintext data.
 
 You can, for instance, generate hierarchical JSONs that contains the information of ancestors of each passage.
-
-## Features
-+ Automatically saves to .json file by using the HTML5 File API
-+ Builds hierarchical or non-hierarchical (plain) JSON objects
-+ Detects cyclic stories to avoid a hierarchical inception 
-+ Custom JSON properties by using the {{propertyKey}}Value{{/propertyKey}} syntax
-+ Exports Twine position information
-+ Builds clean expanded or minified JSON
 
 ## Adding custom properties
 
@@ -102,9 +96,3 @@ A Father->Child relationship will be exported as follows:
     ]
 }
 ```
-
-
-## Planned Features
-
-- Smarter cyclic detection (Detect only Passage<-(nPassages)->Passage that would cause an infinite JSON)
-- Automate JSON validation
